@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <p v-bind:title="message"></p>
+    <p>{{ message }}</p>
+    <p v-if="seen">seen test {{seen}}</p>
+    <ol>
+      <li v-for="todo in todos">{{todo.text}}</li>
+    </ol>
+    <button v-on:click="reverseMessage">reverse</button>
+    <button @click="reverseMessage">reverse2</button>
+    <input v-model="message">
+    <ol>
+      <todo-item v-for="item in groceryList" v-bind:todo="item"></todo-item>
+    </ol>
+    <p v-once>one time binding {{message}}</p>
+    <p v-text="message">v-text</p>
+    <p v-cloak>{{message}}</p>
+    <p :id="message">{{message}}</p>
+    <p v-text="message|capitalize">not working...</p>
+    <p>{{message|capitalize}}</p>
+    <p v-text="reversedMessage"></p>
+  </div>
+
+  <script>
+    Vue.component('todo-item', {
+      props: ['todo'],
+      template: '<li>{{ todo.text }}</li>',
+    });
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'hello world' + new Date().getTime(),
+        seen: true,
+        todos: [
+          { text: 'JavaScript 배우기' },
+          { text: 'Vue 배우기' },
+          { text: '무언가 멋진 것을 만들기' }
+        ],
+        groceryList: [
+          { text: '채소' },
+          { text: '치즈' },
+          { text: '사람이 먹을 수 있는 무엇이든' }
+        ]
+      },
+      methods: {
+        reverseMessage: function() {
+          this.message = this.message.split('').reverse().join('');
+        }
+      },
+      filters: {
+        capitalize: function(value) {
+          if(!value) return '';
+          return value.toString().charAt(0).toUpperCase() + value.slice(1);
+        }
+      },
+      computed: {
+        reversedMessage: function() { // cached
+          return this.message.split('').reverse().join('');
+        }
+      },
+      created: function() {
+        console.log('created: ' + this.message);
+      },
+      mounted: function() {
+        console.log('mounted: ' + this.message);
+      },
+      updated: function() {
+        console.log('updated: ' + this.message);
+      },
+      destroyed: function() {
+        console.log('destroyed: ' + this.message);
+      }
+    })
+
+
+    </script>
+
+</body>
+</html>
